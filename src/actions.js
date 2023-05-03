@@ -1,10 +1,9 @@
 import ghReservedNames from "github-reserved-names"
 
-import api from "./api.js"
-import priv from "./conf.priv.js"
 import util from "./util.js"
+import api from "./api.js"
 
-const { tabOpenLink, Front, Hints, Normal, RUNTIME } = api
+const {tabOpenLink, Front, Hints, Normal, RUNTIME} = api
 
 const actions = {}
 
@@ -14,7 +13,7 @@ const actions = {}
 actions.moveTabNextToTab = (targetId, nextTo, leftOf = false) =>
   browser.tabs.move(targetId, {
     windowId: nextTo.windowId,
-    index: nextTo.index - (leftOf ? 1 : 0),
+    index:    nextTo.index - (leftOf ? 1 : 0),
   })
 
 // TODO
@@ -34,7 +33,7 @@ actions.moveTabNextToTab = (targetId, nextTo, leftOf = false) =>
 // }
 
 actions.dispatchEvents = (type, node, ...eventTypes) =>
-  eventTypes.forEach((t) => {
+  eventTypes.forEach(t => {
     const e = document.createEvent(type)
     e.initEvent(t, true, true)
     node.dispatchEvent(e)
@@ -51,7 +50,7 @@ actions.scrollToHash = (hash = null) => {
   if (!e) {
     return
   }
-  e.scrollIntoView({ behavior: "smooth" })
+  e.scrollIntoView({behavior: "smooth"})
 }
 
 // URL Manipulation/querying
@@ -59,10 +58,10 @@ actions.scrollToHash = (hash = null) => {
 actions.vimEditURL = () =>
   Front.showEditor(
     window.location.href,
-    (url) => {
+    url => {
       actions.openLink(url)
     },
-    "url"
+    "url",
   )
 
 actions.getOrgLink = () => `[[${window.location.href}][${document.title}]]`
@@ -77,7 +76,7 @@ actions.getMarkdownLink = ({
 
 const ddossierUrl = "http://centralops.net/co/DomainDossier.aspx"
 
-actions.getWhoisUrl = ({ hostname = window.location.hostname } = {}) =>
+actions.getWhoisUrl = ({hostname = window.location.hostname} = {}) =>
   `${ddossierUrl}?dom_whois=true&addr=${hostname}`
 
 actions.getDnsInfoUrl = ({
@@ -90,69 +89,74 @@ actions.getDnsInfoUrl = ({
       : ""
   }`
 
-actions.getGoogleCacheUrl = ({ href = window.location.href } = {}) =>
+actions.getGoogleCacheUrl = ({href = window.location.href} = {}) =>
   `https://webcache.googleusercontent.com/search?q=cache:${href}`
 
-actions.getWaybackUrl = ({ href = window.location.href } = {}) =>
+actions.getWaybackUrl = ({href = window.location.href} = {}) =>
   `https://web.archive.org/web/*/${href}`
 
-actions.getOutlineUrl = ({ href = window.location.href } = {}) =>
+actions.getArchivephUrl = ({href = window.location.href} = {}) =>
+  `https://archive.ph/newest/${href}`
+
+actions.getArchiveisUrl = ({href = window.location.href} = {}) =>
+  `https://archive.is/newest/${href}`
+
+actions.getOutlineUrl = ({href = window.location.href} = {}) =>
   `https://outline.com/${href}`
 
-actions.getAlexaUrl = ({ hostname = window.location.hostname } = {}) =>
+actions.getAlexaUrl = ({hostname = window.location.hostname} = {}) =>
   `https://www.alexa.com/siteinfo/${hostname}`
 
-actions.getBuiltWithUrl = ({ href = window.location.href } = {}) =>
+actions.getBuiltWithUrl = ({href = window.location.href} = {}) =>
   `https://www.builtwith.com/?${href}`
 
-actions.getWappalyzerUrl = ({ hostname = window.location.hostname } = {}) =>
+actions.getWappalyzerUrl = ({hostname = window.location.hostname} = {}) =>
   `https://www.wappalyzer.com/lookup/${hostname}`
 
-actions.getDiscussionsUrl = ({ href = window.location.href } = {}) =>
-  `https://discussions.xojoc.pw/?${new URLSearchParams({ url: href })}`
+actions.getDiscussionsUrl = ({href = window.location.href} = {}) =>
+  `https://discussions.xojoc.pw/?${new URLSearchParams({url: href})}`
 
-// // Custom Omnibar interfaces
-// // ------------------------
-// actions.omnibar = {}
-//
-// // AWS Services
-// actions.omnibar.aws = () => {
-//   // const services = [
-//   //   {
-//   //     title: "EC2",
-//   //     url:   "https://cn-northwest-1.console.amazonaws.cn/ec2/v2/home?region=cn-northwest-1",
-//   //   },
-//   //   {
-//   //     title: "Elastic Beanstalk",
-//   //     url:   "https://cn-northwest-1.console.amazonaws.cn/elasticbeanstalk/home?region=cn-northwest-1",
-//   //   },
-//   //   {
-//   //     title: "Batch",
-//   //     url:   "https://cn-northwest-1.console.amazonaws.cn/batch/home?region=cn-northwest-1",
-//   //   },
-//   // ]
-//   // Front.openOmnibar({ type: "UserURLs", extra: services })
-//   Front.openOmnibar({
-//     type:  "Custom",
-//     extra: {
-//       prompt:  "AWS",
-//       onInput: console.log,
-//     },
-//   })
-// }
+// Custom Omnibar interfaces
+// ------------------------
+actions.omnibar = {}
+
+// AWS Services
+actions.omnibar.aws = () => {
+  // const services = [
+  //   {
+  //     title: "EC2",
+  //     url:   "https://cn-northwest-1.console.amazonaws.cn/ec2/v2/home?region=cn-northwest-1",
+  //   },
+  //   {
+  //     title: "Elastic Beanstalk",
+  //     url:   "https://cn-northwest-1.console.amazonaws.cn/elasticbeanstalk/home?region=cn-northwest-1",
+  //   },
+  //   {
+  //     title: "Batch",
+  //     url:   "https://cn-northwest-1.console.amazonaws.cn/batch/home?region=cn-northwest-1",
+  //   },
+  // ]
+  // Front.openOmnibar({ type: "UserURLs", extra: services })
+  Front.openOmnibar({
+    type:  "Custom",
+    extra: {
+      prompt:  "AWS",
+      onInput: console.log,
+    },
+  })
+}
 
 // Surfingkeys-specific actions
 // ----------------------------
-actions.openAnchor = ({
-  newTab = false,
-  active = true,
-  prop = "href",
-} = {}) => (a) => actions.openLink(a[prop], { newTab, active })
+actions.openAnchor =
+  ({newTab = false, active = true, prop = "href"} = {}) =>
+    a =>
+      actions.openLink(a[prop], {newTab, active})
 
-actions.openLink = (url, { newTab = false, active = true } = {}) => {
+actions.openLink = (url, {newTab = false, active = true} = {}) => {
   if (newTab) {
     RUNTIME("openLink", {
-      tab: { tabbed: true, active },
+      tab: {tabbed: true, active},
       url: url instanceof URL ? url.href : url,
     })
     return
@@ -164,9 +168,9 @@ actions.editSettings = () =>
   tabOpenLink(chrome.extension.getURL("/pages/options.html"))
 
 actions.togglePdfViewer = () =>
-  chrome.storage.local.get("noPdfViewer", (resp) => {
+  chrome.storage.local.get("noPdfViewer", resp => {
     if (!resp.noPdfViewer) {
-      chrome.storage.local.set({ noPdfViewer: 1 }, () => {
+      chrome.storage.local.set({noPdfViewer: 1}, () => {
         Front.showBanner("PDF viewer disabled.")
       })
     } else {
@@ -177,8 +181,8 @@ actions.togglePdfViewer = () =>
   })
 
 actions.previewLink = () =>
-  util.createHints("a[href]", (a) =>
-    Front.showEditor(a.href, (url) => actions.openLink(url), "url")
+  util.createHints("a[href]", a =>
+    Front.showEditor(a.href, url => actions.openLink(url), "url"),
   )
 
 actions.scrollElement = (el, dir) => {
@@ -204,7 +208,7 @@ actions.az.viewProduct = () => {
   const reHost = /^([-\w]+[.])*amazon.\w+$/
   const rePath = /^(?:.*\/)*(?:dp|gp\/product)(?:\/(\w{10})).*/
   const elements = {}
-  document.querySelectorAll("a[href]").forEach((a) => {
+  document.querySelectorAll("a[href]").forEach(a => {
     const u = new URL(a.href)
     if (u.hash.length === 0 && reHost.test(u.hostname)) {
       const rePathRes = rePath.exec(u.pathname)
@@ -235,8 +239,8 @@ actions.az.viewProduct = () => {
 // -----
 actions.viewGodoc = () =>
   actions.openLink(
-    `https://godoc.org/${util.getURLPath({ count: 2, domain: true })}`,
-    { newTab: true }
+    `https://godoc.org/${util.getURLPath({count: 2, domain: true})}`,
+    {newTab: true},
   )
 
 // Google
@@ -247,8 +251,8 @@ actions.go.parseLocation = () => {
   const p = u.pathname.split("/")
 
   const res = {
-    type: "unknown",
-    url: u,
+    type:  "unknown",
+    url:   u,
     query: q,
   }
 
@@ -257,17 +261,17 @@ actions.go.parseLocation = () => {
       res.type = "home"
     } else if (p[1] === "search") {
       switch (u.searchParams.get("tbm")) {
-        case "vid":
-          res.type = "videos"
-          break
-        case "isch":
-          res.type = "images"
-          break
-        case "nws":
-          res.type = "news"
-          break
-        default:
-          res.type = "web"
+      case "vid":
+        res.type = "videos"
+        break
+      case "isch":
+        res.type = "images"
+        break
+      case "nws":
+        res.type = "news"
+        break
+      default:
+        res.type = "web"
       }
     } else if (p[1] === "maps") {
       res.type = "maps"
@@ -291,27 +295,27 @@ actions.go.ddg = () => {
   }
 
   switch (g.type) {
-    case "videos":
-      ddg.searchParams.set("ia", "videos")
-      ddg.searchParams.set("iax", "videos")
-      break
-    case "images":
-      ddg.searchParams.set("ia", "images")
-      ddg.searchParams.set("iax", "images")
-      break
-    case "news":
-      ddg.searchParams.set("ia", "news")
-      ddg.searchParams.set("iar", "news")
-      break
-    case "maps":
-      ddg.searchParams.set("iaxm", "maps")
-      break
-    case "search":
-    case "home":
-    case "unknown":
-    default:
-      ddg.searchParams.set("ia", "web")
-      break
+  case "videos":
+    ddg.searchParams.set("ia", "videos")
+    ddg.searchParams.set("iax", "videos")
+    break
+  case "images":
+    ddg.searchParams.set("ia", "images")
+    ddg.searchParams.set("iax", "images")
+    break
+  case "news":
+    ddg.searchParams.set("ia", "news")
+    ddg.searchParams.set("iar", "news")
+    break
+  case "maps":
+    ddg.searchParams.set("iaxm", "maps")
+    break
+  case "search":
+  case "home":
+  case "unknown":
+  default:
+    ddg.searchParams.set("ia", "web")
+    break
   }
 
   actions.openLink(ddg.href)
@@ -351,7 +355,7 @@ actions.dg.goog = () => {
   actions.openLink(goog.href)
 }
 
-actions.dg.siteSearch = (site) => {
+actions.dg.siteSearch = site => {
   let u
   try {
     u = new URL(window.location.href)
@@ -378,62 +382,65 @@ actions.dg.siteSearch = (site) => {
 
 // GitHub
 // ------
+
 actions.gh = {}
-actions.gh.star = ({ toggle = false } = {}) => async () => {
-  const hasDisplayNoneParent = (e) =>
-    window.getComputedStyle(e).display === "none" ||
-    (e.parentElement ? hasDisplayNoneParent(e.parentElement) : false)
+actions.gh.star =
+  ({toggle = false} = {}) =>
+    async () => {
+      const hasDisplayNoneParent = e =>
+        window.getComputedStyle(e).display === "none" ||
+      (e.parentElement ? hasDisplayNoneParent(e.parentElement) : false)
 
-  const starContainers = Array.from(
-    document.querySelectorAll("div.starring-container")
-  ).filter((e) => !hasDisplayNoneParent(e))
+      const starContainers = Array.from(
+        document.querySelectorAll("div.starring-container"),
+      ).filter(e => !hasDisplayNoneParent(e))
 
-  let container
-  switch (starContainers.length) {
-    case 0:
-      return
-    case 1:
-      ;[container] = starContainers
-      break
-    default:
-      try {
-        container = await util.createHints(starContainers, { action: null })
-      } catch (_) {
+      let container
+      switch (starContainers.length) {
+      case 0:
         return
+      case 1:
+        ;[container] = starContainers
+        break
+      default:
+        try {
+          container = await util.createHints(starContainers, {action: null})
+        } catch (_) {
+          return
+        }
       }
-  }
 
-  const repoUrl = container.parentElement.parentElement?.matches(
-    "ul.pagehead-actions"
-  )
-    ? window.location.pathname
-    : new URL(container.parentElement.querySelector("form").action).pathname
-
-  const status = container.classList.contains("on")
-  const repo = repoUrl.slice(1).split("/").slice(0, 2).join("/")
-
-  let star = "★"
-  let statusMsg = "starred"
-  let copula = "is"
-
-  if ((status && toggle) || (!status && !toggle)) {
-    statusMsg = `un${statusMsg}`
-    star = "☆"
-  }
-
-  if (toggle) {
-    copula = "has been"
-    container
-      .querySelector(
-        status
-          ? ".starred button, button.starred"
-          : ".unstarred button, button.unstarred"
+      const repoUrl = container.parentElement.parentElement?.matches(
+        "ul.pagehead-actions",
       )
-      .click()
-  }
+        ? window.location.pathname
+        : new URL(container.parentElement.querySelector("form").action).pathname
 
-  Front.showBanner(`${star} Repository ${repo} ${copula} ${statusMsg}!`)
-}
+      const status = container.classList.contains("on")
+      const repo = repoUrl.slice(1).split("/").slice(0, 2).join("/")
+
+      let star = "★"
+      let statusMsg = "starred"
+      let copula = "is"
+
+      if ((status && toggle) || (!status && !toggle)) {
+        statusMsg = `un${statusMsg}`
+        star = "☆"
+      }
+
+      if (toggle) {
+        copula = "has been"
+        container
+          .querySelector(
+            status
+              ? ".starred button, button.starred"
+              : ".unstarred button, button.unstarred",
+          )
+          .click()
+      }
+
+      Front.showBanner(`${star} Repository ${repo} ${copula} ${statusMsg}!`)
+    }
 
 actions.gh.parseRepo = (url = window.location.href, rootOnly = false) => {
   let u
@@ -442,11 +449,11 @@ actions.gh.parseRepo = (url = window.location.href, rootOnly = false) => {
   } catch (e) {
     u = new URL(`https://github.com/${url}`)
   }
-  const [user, repo, ...rest] = u.pathname.split("/").filter((s) => s !== "")
+  const [user, repo, ...rest] = u.pathname.split("/").filter(s => s !== "")
   const isRoot = rest.length === 0
   const cond =
     ["github.com", "gist.github.com", "raw.githubusercontent.com"].includes(
-      u.hostname
+      u.hostname,
     ) &&
     typeof user === "string" &&
     user.length > 0 &&
@@ -457,23 +464,23 @@ actions.gh.parseRepo = (url = window.location.href, rootOnly = false) => {
     !ghReservedNames.check(user)
   return cond
     ? {
-        type: "repo",
-        user,
-        repo,
-        owner: user,
-        name: repo,
-        href: url,
-        url: u,
-        repoBase: `${user}/${repo}`,
-        repoRoot: isRoot,
-        repoPath: rest,
-      }
+      type:     "repo",
+      user,
+      repo,
+      owner:    user,
+      name:     repo,
+      href:     url,
+      url:      u,
+      repoBase: `${user}/${repo}`,
+      repoRoot: isRoot,
+      repoPath: rest,
+    }
     : null
 }
 
 actions.gh.parseUser = (url = window.location.href, rootOnly = false) => {
   const u = url instanceof URL ? url : new URL(url)
-  const [user, ...rest] = u.pathname.split("/").filter((s) => s !== "")
+  const [user, ...rest] = u.pathname.split("/").filter(s => s !== "")
   const isRoot = rest.length === 0
   const cond =
     u.origin === window.location.origin &&
@@ -484,14 +491,14 @@ actions.gh.parseUser = (url = window.location.href, rootOnly = false) => {
     !ghReservedNames.check(user)
   return cond
     ? {
-        type: "user",
-        name: user,
-        user,
-        href: url,
-        url: u,
-        userRoot: isRoot,
-        userPath: rest,
-      }
+      type:     "user",
+      name:     user,
+      user,
+      href:     url,
+      url:      u,
+      userRoot: isRoot,
+      userPath: rest,
+    }
     : null
 }
 
@@ -499,7 +506,7 @@ actions.gh.parseFile = (url = window.location.href) => {
   const u = url instanceof URL ? url : new URL(url)
   const [user, repo, pathType, commitHash, ...rest] = u.pathname
     .split("/")
-    .filter((s) => s !== "")
+    .filter(s => s !== "")
   const cond =
     u.origin === window.location.origin &&
     typeof user === "string" &&
@@ -514,22 +521,22 @@ actions.gh.parseFile = (url = window.location.href) => {
     !ghReservedNames.check(user)
   if (!cond) return null
   const f = {
-    type: "file",
+    type:        "file",
     user,
     repo,
     pathType,
     commitHash,
     isDirectory: pathType === "tree",
-    href: url,
-    url: u,
-    filePath: rest,
-    repoBase: `/${user}/${repo}`,
+    href:        url,
+    url:         u,
+    filePath:    rest,
+    repoBase:    `/${user}/${repo}`,
   }
   f.rawUrl = f.isDirectory
     ? null
     : `https://raw.githubusercontent.com/${f.user}/${f.repo}/${
-        f.commitHash
-      }/${f.filePath.join("/")}`
+      f.commitHash
+    }/${f.filePath.join("/")}`
   return f
 }
 
@@ -537,7 +544,7 @@ actions.gh.parseCommit = (url = window.location.href) => {
   const u = url instanceof URL ? url : new URL(url)
   const [user, repo, commit, commitHash] = u.pathname
     .split("/")
-    .filter((s) => s !== "")
+    .filter(s => s !== "")
   const cond =
     u.origin === window.location.origin &&
     typeof user === "string" &&
@@ -552,13 +559,13 @@ actions.gh.parseCommit = (url = window.location.href) => {
     !ghReservedNames.check(user)
   return cond
     ? {
-        type: "commit",
-        user,
-        repo,
-        commitHash,
-        href: url,
-        url: u,
-      }
+      type: "commit",
+      user,
+      repo,
+      commitHash,
+      href: url,
+      url:  u,
+    }
     : null
 }
 
@@ -566,7 +573,7 @@ actions.gh.parseIssue = (url = window.location.href) => {
   const u = url instanceof URL ? url : new URL(url)
   const [user, repo, maybeIssues, ...rest] = u.pathname
     .split("/")
-    .filter((s) => s !== "")
+    .filter(s => s !== "")
   const isRoot = rest.length === 0
   const cond =
     u.origin === window.location.origin &&
@@ -579,19 +586,19 @@ actions.gh.parseIssue = (url = window.location.href) => {
     !ghReservedNames.check(user)
   return cond
     ? {
-        href: url,
-        url: u,
-        ...(isRoot
-          ? {
-              type: "issues",
-              issuePath: rest,
-            }
-          : {
-              type: "issue",
-              number: rest[0],
-              issuePath: rest,
-            }),
-      }
+      href: url,
+      url:  u,
+      ...(isRoot
+        ? {
+          type:      "issues",
+          issuePath: rest,
+        }
+        : {
+          type:      "issue",
+          number:    rest[0],
+          issuePath: rest,
+        }),
+    }
     : null
 }
 
@@ -599,7 +606,7 @@ actions.gh.parsePull = (url = window.location.href) => {
   const u = url instanceof URL ? url : new URL(url)
   const [user, repo, maybePulls, ...rest] = u.pathname
     .split("/")
-    .filter((s) => s !== "")
+    .filter(s => s !== "")
   const isRoot = rest.length === 0
   const cond =
     u.origin === window.location.origin &&
@@ -612,19 +619,19 @@ actions.gh.parsePull = (url = window.location.href) => {
     !ghReservedNames.check(user)
   return cond
     ? {
-        href: url,
-        url: u,
-        ...(isRoot
-          ? {
-              type: "pulls",
-              pullPath: rest,
-            }
-          : {
-              type: "pull",
-              number: rest[0],
-              pullPath: rest,
-            }),
-      }
+      href: url,
+      url:  u,
+      ...(isRoot
+        ? {
+          type:     "pulls",
+          pullPath: rest,
+        }
+        : {
+          type:     "pull",
+          number:   rest[0],
+          pullPath: rest,
+        }),
+    }
     : null
 }
 
@@ -644,21 +651,21 @@ actions.gh.isPull = (url = window.location.href) =>
   actions.gh.parsePull(url) !== null
 
 actions.gh.openRepo = () =>
-  util.createHintsFiltered((a) => actions.gh.isRepo(a.href))
+  util.createHintsFiltered(a => actions.gh.isRepo(a.href))
 actions.gh.openUser = () =>
-  util.createHintsFiltered((a) => actions.gh.isUser(a.href))
+  util.createHintsFiltered(a => actions.gh.isUser(a.href))
 actions.gh.openFile = () =>
-  util.createHintsFiltered((a) => actions.gh.isFile(a.href))
+  util.createHintsFiltered(a => actions.gh.isFile(a.href))
 actions.gh.openCommit = () =>
-  util.createHintsFiltered((a) => actions.gh.isCommit(a.href))
+  util.createHintsFiltered(a => actions.gh.isCommit(a.href))
 actions.gh.openIssue = () =>
-  util.createHintsFiltered((a) => actions.gh.isIssue(a.href))
+  util.createHintsFiltered(a => actions.gh.isIssue(a.href))
 actions.gh.openPull = () =>
-  util.createHintsFiltered((a) => actions.gh.isPull(a.href))
+  util.createHintsFiltered(a => actions.gh.isPull(a.href))
 
-actions.gh.openPage = (path) => actions.openLink(`https://github.com/${path}`)
+actions.gh.openPage = path => actions.openLink(`https://github.com/${path}`)
 
-actions.gh.openRepoPage = (repoPath) => {
+actions.gh.openRepoPage = repoPath => {
   const repo = actions.gh.parseRepo()
   if (repo === null) return
   actions.gh.openPage(`${repo.repoBase}${repoPath}`)
@@ -683,37 +690,37 @@ actions.gh.openSourceFile = () => {
 
 actions.gh.openProfile = () =>
   actions.gh.openPage(
-    `${document.querySelector("meta[name='user-login']").content}`
+    `${document.querySelector("meta[name='user-login']").content}`,
   )
 
 actions.gh.toggleLangStats = () =>
   document.querySelector(".repository-lang-stats-graph").click()
 
 actions.gh.goParent = () => {
-  const segments = window.location.pathname.split("/").filter((s) => s !== "")
+  const segments = window.location.pathname.split("/").filter(s => s !== "")
   const newPath = (() => {
     const [user, repo, pathType] = segments
     switch (segments.length) {
-      case 0:
-        return false
-      case 4:
-        switch (pathType) {
-          case "blob":
-          case "tree":
-            return [user, repo]
-          case "pull":
-            return [user, repo, "pulls"]
-          default:
-            break
-        }
-        break
-      case 5:
-        if (pathType === "blob") {
-          return [user, repo]
-        }
-        break
+    case 0:
+      return false
+    case 4:
+      switch (pathType) {
+      case "blob":
+      case "tree":
+        return [user, repo]
+      case "pull":
+        return [user, repo, "pulls"]
       default:
         break
+      }
+      break
+    case 5:
+      if (pathType === "blob") {
+        return [user, repo]
+      }
+      break
+    default:
+      break
     }
     return segments.slice(0, segments.length - 1)
   })()
@@ -749,14 +756,14 @@ actions.gh.viewSourceGraph = () => {
     url.pathname = ""
   }
 
-  actions.openLink(url.href, { newTab: true })
+  actions.openLink(url.href, {newTab: true})
 }
 
-actions.gh.selectFile = async ({ files = true, directories = true } = {}) => {
+actions.gh.selectFile = async ({files = true, directories = true} = {}) => {
   if (!(files || directories))
     throw new Error("At least one of 'files' or 'directories' must be true")
 
-  const test = (f) =>
+  const test = f =>
     f && !((!directories && f.isDirectory) || (!files && !f.isDirectory))
 
   let file = actions.gh.parseFile()
@@ -765,7 +772,7 @@ actions.gh.selectFile = async ({ files = true, directories = true } = {}) => {
   const repo = actions.gh.parseRepo()
   if (repo === null) throw new Error("Not a repository")
 
-  const elem = util.createHintsFiltered((a) => {
+  const elem = util.createHintsFiltered(a => {
     const f = actions.gh.parseFile(a.href)
     return f && f.isDirectory === false
   }, null)
@@ -775,7 +782,7 @@ actions.gh.selectFile = async ({ files = true, directories = true } = {}) => {
   return file
 }
 
-actions.gh.openFileFromClipboard = async ({ newTab = true } = {}) => {
+actions.gh.openFileFromClipboard = async ({newTab = true} = {}) => {
   const clip = await navigator.clipboard.readText()
   if (typeof clip !== "string" || clip.length === 0) {
     return
@@ -783,8 +790,8 @@ actions.gh.openFileFromClipboard = async ({ newTab = true } = {}) => {
 
   const loc = window.location.href
   const dest = {
-    user: null,
-    repo: null,
+    user:       null,
+    repo:       null,
     commitHash: "master",
   }
 
@@ -811,8 +818,23 @@ actions.gh.openFileFromClipboard = async ({ newTab = true } = {}) => {
 
   actions.openLink(
     `https://github.com/${dest.user}/${dest.repo}/tree/${dest.commitHash}/${clip}`,
-    { newTab }
+    {
+      newTab,
+    },
   )
+}
+
+actions.gh.openForks = () => {
+  const {title} = document
+  if (title) {
+    const thing = title.split(/(GitHub\s-\s)*([^:]*)/)[2]
+    if (thing) {
+      actions.openLink(
+        `https://techgaun.github.io/active-forks/index.html#${thing}`,
+        {newTab: true},
+      )
+    }
+  }
 }
 
 // GitLab
@@ -842,13 +864,13 @@ actions.tw.openUser = () =>
     [].concat(
       [
         ...document.querySelectorAll(
-          "a[role='link'] img[src^='https://pbs.twimg.com/profile_images']"
+          "a[role='link'] img[src^='https://pbs.twimg.com/profile_images']",
         ),
-      ].map((e) => e.closest("a")),
-      [...document.querySelectorAll("a[role='link']")].filter((e) =>
-        e.text.match(/^@/)
-      )
-    )
+      ].map(e => e.closest("a")),
+      [...document.querySelectorAll("a[role='link']")].filter(e =>
+        e.text.match(/^@/),
+      ),
+    ),
   )
 
 // Reddit
@@ -856,8 +878,8 @@ actions.tw.openUser = () =>
 actions.re = {}
 actions.re.collapseNextComment = () => {
   const vis = Array.from(
-    document.querySelectorAll(".noncollapsed.comment")
-  ).filter((e) => util.isElementInViewport(e))
+    document.querySelectorAll(".noncollapsed.comment"),
+  ).filter(e => util.isElementInViewport(e))
   if (vis.length > 0) {
     vis[0].querySelector(".expand").click()
   }
@@ -876,7 +898,7 @@ actions.hn.goParent = () => {
 
 actions.hn.collapseNextComment = () => {
   const vis = Array.from(document.querySelectorAll("a.togg")).filter(
-    (e) => e.innerText === "[–]" && util.isElementInViewport(e)
+    e => e.innerText === "[–]" && util.isElementInViewport(e),
   )
   if (vis.length > 0) {
     vis[0].click()
@@ -906,26 +928,26 @@ actions.hn.goPage = (dist = 1) => {
   actions.openLink(u.href)
 }
 
-actions.hn.openLinkAndComments = (e) => {
+actions.hn.openLinkAndComments = e => {
   const linkUrl = e.querySelector(".titleline>a").href
   const commentsUrl = e.nextElementSibling.querySelector(
-    "a[href^='item']:not(.titlelink)"
+    "a[href^='item']:not(.titlelink)",
   ).href
-  actions.openLink(commentsUrl, { newTab: true })
-  actions.openLink(linkUrl, { newTab: true })
+  actions.openLink(commentsUrl, {newTab: true})
+  actions.openLink(linkUrl, {newTab: true})
 }
 
 // ProductHunt
 // -----------
 actions.ph = {}
 actions.ph.openExternal = () => {
-  Hints.create("ul[class^='postsList_'] > li > div[class^='item_']", (p) =>
+  Hints.create("ul[class^='postsList_'] > li > div[class^='item_']", p =>
     actions.openLink(
       p.querySelector(
-        "div[class^='meta_'] > div[class^='actions_'] > div[class^='minorActions_'] > a:nth-child(1)"
+        "div[class^='meta_'] > div[class^='actions_'] > div[class^='minorActions_'] > a:nth-child(1)",
       ).href,
-      { newTab: true }
-    )
+      {newTab: true},
+    ),
   )
 }
 
@@ -942,7 +964,7 @@ actions.wp.toggleSimple = () => {
       }
       return s
     })
-    .filter((s) => s !== "")
+    .filter(s => s !== "")
     .join(".")
   actions.openLink(u.href)
 }
@@ -955,18 +977,18 @@ actions.wp.viewWikiRank = () => {
     return
   }
   const article = p.slice(2).join("/")
-  actions.openLink(`https://wikirank.net/${lang}/${article}`, { newTab: true })
+  actions.openLink(`https://wikirank.net/${lang}/${article}`, {newTab: true})
 }
 
 actions.wp.markdownSummary = () =>
   `> ${[
-    (acc) => [...acc.querySelectorAll("sup")].map((e) => e.remove()),
-    (acc) =>
-      [...acc.querySelectorAll("b")].forEach((e) => {
+    acc => [...acc.querySelectorAll("sup")].map(e => e.remove()),
+    acc =>
+      [...acc.querySelectorAll("b")].forEach(e => {
         e.innerText = `**${e.innerText}**`
       }),
-    (acc) =>
-      [...acc.querySelectorAll("i")].forEach((e) => {
+    acc =>
+      [...acc.querySelectorAll("i")].forEach(e => {
         e.innerText = `_${e.innerText}_`
       }),
   ]
@@ -974,7 +996,7 @@ actions.wp.markdownSummary = () =>
       (acc, f) => (f(acc) && false) || acc,
       document
         .querySelector("#mw-content-text p:not([class]):not([id])")
-        .cloneNode(true)
+        .cloneNode(true),
     )
     .innerText.trim()}
 
@@ -983,23 +1005,23 @@ actions.wp.markdownSummary = () =>
 // Nest Thermostat Controller
 // --------------------------
 actions.nt = {}
-actions.nt.adjustTemp = (dir) =>
+actions.nt.adjustTemp = dir =>
   document
     .querySelector(
       `button[data-test='thermozilla-controller-controls-${
         dir > 0 ? "in" : "de"
-      }crement-button']`
+      }crement-button']`,
     )
     .click()
 
-actions.nt.setMode = async (mode) => {
-  const selectMode = async (popover) => {
+actions.nt.setMode = async mode => {
+  const selectMode = async popover => {
     const query = () => !popover.isConnected
     const q = query()
     if (q) return q
     popover
       .querySelector(
-        `button[data-test='thermozilla-mode-switcher-${mode}-button']`
+        `button[data-test='thermozilla-mode-switcher-${mode}-button']`,
       )
       .click()
     return util.until(query)
@@ -1020,30 +1042,30 @@ actions.nt.setMode = async (mode) => {
   return selectMode(popover)
 }
 
-actions.nt.setFan = async (desiredState) => {
+actions.nt.setFan = async desiredState => {
   const startStopFan = async (startStop, popover) => {
     const query = () => !popover.isConnected
     const q = query()
     if (q) return q
     popover
       .querySelector(
-        `div[data-test='thermozilla-fan-timer-${startStop}-button']`
+        `div[data-test='thermozilla-fan-timer-${startStop}-button']`,
       )
       .click()
     return util.until(query)
   }
 
-  const selectFanTime = async (listbox) => {
+  const selectFanTime = async listbox => {
     const query = () => !listbox.isConnected
     const q = query()
     if (q) return q
     Hints.dispatchMouseClick(
-      listbox.querySelector("div[role='option']:last-child")
+      listbox.querySelector("div[role='option']:last-child"),
     )
     return util.until(query)
   }
 
-  const openFanListbox = async (popover) => {
+  const openFanListbox = async popover => {
     const query = () => popover.querySelector("div[role='listbox']")
     const q = query()
     if (q) return q
@@ -1062,7 +1084,7 @@ actions.nt.setFan = async (desiredState) => {
 
   const fanRunning = () =>
     document.querySelector(
-      "div[data-test='thermozilla-aag-fan-listcell-title']"
+      "div[data-test='thermozilla-aag-fan-listcell-title']",
     )
 
   const startFan = async () => {
@@ -1093,19 +1115,19 @@ actions.re.focusSearch = () =>
   actions.dispatchMouseEvents(
     document.getElementById("docsearch"),
     "mousedown",
-    "click"
+    "click",
   )
 
-actions.re.scrollSidebar = (dir) =>
+actions.re.scrollSidebar = dir =>
   actions.scrollElement(document.getElementById("sidebar-content"), dir)
-actions.re.scrollContent = (dir) => actions.scrollElement(document.body, dir)
+actions.re.scrollContent = dir => actions.scrollElement(document.body, dir)
 
 // devdocs.io
 actions.dv = {}
 
-actions.dv.scrollSidebar = (dir) =>
+actions.dv.scrollSidebar = dir =>
   actions.scrollElement(document.querySelector("._list"), dir)
-actions.dv.scrollContent = (dir) =>
+actions.dv.scrollContent = dir =>
   actions.scrollElement(document.querySelector("._content"), dir)
 
 // ikea.com
@@ -1118,7 +1140,7 @@ actions.ik.toggleProductDetails = async () => {
     document.querySelector(".range-revamp-expander__btn")
   const productDetailsButtonQuery = () =>
     document.querySelector(
-      ".range-revamp-product-information-section__button button"
+      ".range-revamp-product-information-section__button button",
     )
 
   const openProductDetailsModal = async () => {
@@ -1153,18 +1175,7 @@ actions.yt.getCurrentTimestamp = () => {
     ?.innerText?.split(":")
     ?.reverse()
     ?.map(Number) ?? [0, 0, 0]
-  return [ss, mm, hh]
-}
-
-actions.yt.getCurrentTimestampSeconds = () => {
-  const [ss, mm, hh] = actions.yt.getCurrentTimestamp()
   return hh * 60 * 60 + mm * 60 + ss
-}
-
-actions.yt.getCurrentTimestampHuman = () => {
-  const [ss, mm, hh] = actions.yt.getCurrentTimestamp()
-  const pad = (n) => `${n}`.padStart(2, "0")
-  return hh > 0 ? `${hh}:${pad(mm)}:${pad(ss)}` : `${mm}:${pad(ss)}`
 }
 
 actions.yt.getShortLink = () => {
@@ -1173,35 +1184,9 @@ actions.yt.getShortLink = () => {
 }
 
 actions.yt.getCurrentTimestampLink = () =>
-  `${actions.yt.getShortLink()}?t=${actions.yt.getCurrentTimestampSeconds()}`
+  `${actions.yt.getShortLink()}?t=${actions.yt.getCurrentTimestamp()}`
 
 actions.yt.getCurrentTimestampMarkdownLink = () =>
-  actions.getMarkdownLink({
-    title: `${
-      document.querySelector("#ytd-player .ytp-title").innerText
-    } @ ${actions.yt.getCurrentTimestampHuman()} - YouTube`,
-    href: actions.yt.getCurrentTimestampLink(),
-  })
-
-// DOI
-actions.doi = {}
-actions.doi.providers = {}
-actions.doi.providers.meta_citation_doi = () =>
-  document.querySelector("meta[name=citation_doi]")?.content
-actions.doi.providers.meta_dcIdentifier_doi = () =>
-  document.querySelector("meta[name='dc.Identifier'][scheme=doi]")?.content
-
-actions.doi.getLink = (provider) => {
-  if (!priv.doi_handler) {
-    Front.showBanner("DOI Handler not confingured (see conf.priv.example.js)")
-    return
-  }
-  const doi = provider()
-  if (!doi) {
-    Front.showBanner("DOI not found")
-    return
-  }
-  return priv.doi_handler(doi)
-}
+  actions.getMarkdownLink({href: actions.yt.getCurrentTimestampLink()})
 
 export default actions

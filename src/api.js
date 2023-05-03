@@ -41,7 +41,7 @@ const getApi = () => {
     Visual,
     Front,
 
-    insertJS: Normal.insertJS,
+    insertJS:       Normal.insertJS,
     addSearchAlias: addSearchAliasX,
 
     aceVimMap,

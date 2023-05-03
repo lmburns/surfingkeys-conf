@@ -1,11 +1,31 @@
 export default `
+  * {
+    font-family: monospace, "FiraCode Nerd Font Mono", "Input Mono", "DejaVu Sans Mono", DejaVu, Arial, sans-serif;
+  }
+
+  ::selection {
+    background-color: #864472;
+  }
+  .surfingkeys_selection_mark {
+    background-color: #864472 !important;
+    color: #d4b1ff !important;
+    opacity: 0.7;
+  }
+  .surfingkeys_cursor {
+    background-color: #864472 !important;
+    color: rgb(240, 248, 255);
+  }
+
+  .sk_theme input {
+      font-family: "FiraCode Nerd Font Mono", monospace;
+  }
+
   body {
-    font-family: "Input Mono", "DejaVu Sans Mono", DejaVu, Arial, sans-serif;
     font-size: 12pt;
   }
 
   #sk_keystroke kbd {
-    font-family: "Sudo Nerd Font Mono", "Sudo Mono", "Sudo",
+    font-family: "FiraMono Nerd Font Mono", "FiraCode Nerd Font Mono", "BlexMono Nerd Font Mono",
       "Input Mono Nerd Font", "Input Mono", "DejaVu Sans Mono", "DejaVu", "Arial",
       sans-serif;
     font-size: 10pt;
@@ -19,6 +39,8 @@ export default `
 
   #sk_omnibarSearchResult {
     margin: 0 !important;
+    max-height: unset;
+    /* overflow-y: scroll; */
   }
 
   #sk_omnibar li {
