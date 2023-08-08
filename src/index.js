@@ -53,19 +53,19 @@ const registerKey = (domain, mapObj, siteleader) => {
 
     let mapFns = [map, mapkey]
     switch (mapObj.mode) {
-    case "v":
-    case "visual":
-      mapFns = [vmap, vmapkey]
-      break
-    case "i":
-    case "insert":
-      mapFns = [imap, imapkey]
-      break
-    case "c":
-    case "command":
-      mapFns = [cmap, null]
-      break
-    default:
+      case "v":
+      case "visual":
+        mapFns = [vmap, vmapkey]
+        break
+      case "i":
+      case "insert":
+        mapFns = [imap, imapkey]
+        break
+      case "c":
+      case "command":
+        mapFns = [cmap, null]
+        break
+      default:
     }
 
     if (typeof mapObj.map !== "undefined") {
@@ -94,15 +94,16 @@ const registerSearchEngines = (searchEngines, searchleader) =>
     const options = {
       favicon_url: s.favicon,
     }
+
     addSearchAlias(
-      s.alias,
-      s.name,
-      s.search,
-      searchleader,
-      s.compl,
-      s.callback,
-      undefined,
-      options,
+      s.alias, // alias
+      s.name, // prompt
+      s.search, // search_url
+      searchleader, // search_leader_key=s
+      s.compl, // suggestion_url=null
+      s.callback, // callback_to_parse_suggestion=null
+      undefined, // only_this_site_key=o
+      options, // options=null
     )
     mapkey(`${searchleader}${s.alias}`, `#8Search ${s.name}`, () =>
       Front.openOmnibar({type: "SearchEngine", extra: s.alias}),
@@ -125,8 +126,9 @@ const registerSearchEngines = (searchEngines, searchleader) =>
     }
   })
 
-const main = () => {
+function main() {
   window.surfingKeys = api
+  // eslint-disable-next-line no-console
   console.log({window, surfingKeys: window.surfingKeys})
 
   // settings
@@ -195,3 +197,5 @@ if (typeof window !== "undefined") {
   //   console.trace(err)
   // }
 }
+
+// vim: ft=javascript:et:sw=2:ts=2:sts=2:tw=100

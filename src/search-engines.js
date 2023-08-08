@@ -57,7 +57,9 @@ const googleCustomSearch = opts => {
   }
 }
 
-// ****** Arch Linux ****** //
+//  ╭──────────────────────────────────────────────────────────╮
+//  │                        Arch Linux                        │
+//  ╰──────────────────────────────────────────────────────────╯
 
 // Arch Linux official repos
 completions.al = googleCustomSearch({
@@ -101,7 +103,85 @@ completions.af = googleCustomSearch({
   domain: "bbs.archlinux.org",
 })
 
-// ****** Technical Resources ****** //
+// Search for Linux packages
+completions.pkg = {
+  alias:  "pkg",
+  name:   "pkg",
+  search: "https://pkgs.org/search/?q=",
+}
+
+// ╭──────────────────────────────────────────────────────────╮
+// │                   Linux / Code General                   │
+// ╰──────────────────────────────────────────────────────────╯
+
+// BSD man(3) - Library Calls
+completions.bsdman3 = {
+  alias:  "bman3",
+  name:   "bsdman_3_libcalls",
+  search: "https://man.freebsd.org/cgi/man.cgi?apropos=0&sektion=3&format=html&query=",
+}
+
+// manned.org
+completions.manned = {
+  alias:  "aman",
+  name:   "manned",
+  search: "https://manned.org/browse/search?q=",
+}
+
+// man.cx - General
+completions.mancx = {
+  alias:  "cman",
+  name:   "mancx",
+  search: "https://man.cx/",
+}
+
+// man.he(1) - Programs
+completions.man1 = {
+  alias:  "man1",
+  name:   "man_1_progs",
+  search: "http://man.he.net/?section=1&topic=",
+}
+// man.he(2) - Syscalls
+completions.man2 = {
+  alias:  "man2",
+  name:   "man_2_syscalls",
+  search: "http://man.he.net/?section=2&topic=",
+}
+// man.he(3) - Library Calls
+completions.man3 = {
+  alias:  "man3",
+  name:   "man_3_libcalls",
+  search: "http://man.he.net/?section=3&topic=",
+}
+// man.he(4) - Devices
+completions.man4 = {
+  alias:  "man4",
+  name:   "man_4_devices",
+  search: "http://man.he.net/?section=4&topic=",
+}
+// man.he(5) - File Formats
+completions.man5 = {
+  alias:  "man5",
+  name:   "man_5_fileformat",
+  search: "http://man.he.net/?section=5&topic=",
+}
+// man.he(7) - Overview, Misc
+completions.man7 = {
+  alias:  "man7",
+  name:   "man_7_misc",
+  search: "http://man.he.net/?section=7&topic=",
+}
+
+// SourceForge
+completions.sourceforge = {
+  alias:  "sf",
+  name:   "sourceforge",
+  search: "https://sourceforge.net/ search/?words=",
+}
+
+//  ╭──────────────────────────────────────────────────────────╮
+//  │                   Technical Resources                    │
+//  ╰──────────────────────────────────────────────────────────╯
 
 // AlternativeTo
 completions.at = {
@@ -231,7 +311,7 @@ completions.fe = {
   callback: parseFirefoxAddonsRes,
 }
 
-// OWASP Wiki
+// OWASP Wiki - Cybersecurity
 completions.ow = {
   alias:  "ow",
   name:   "owasp",
@@ -258,9 +338,30 @@ completions.so.callback = response =>
 
 // StackExchange - all sites (No completion)
 completions.se = {
-  alias:  "se",
+  alias:  "se", // "sse"
   name:   "stackexchange",
   search: "https://stackexchange.com/search?q=",
+}
+
+// StackExchange - Unix
+completions.sx = {
+  alias:  "sx", // "ssx"
+  name:   "stackunix",
+  search: "https://unix.stackexchange.com/search?q=",
+}
+
+// SuperUser
+completions.su = {
+  alias:  "su", // "ssu"
+  name:   "superuser",
+  search: "https://superuser.com/search?q=",
+}
+
+// StackExchange - Math
+completions.sm = {
+  alias:  "sm", // "ssm"
+  name:   "stackmath",
+  search: "https://math.stackexchange.com/search?q=",
 }
 
 // DockerHub repo search
@@ -269,6 +370,13 @@ completions.dh = {
   name:   "dockerhub",
   search: "https://hub.docker.com/search/?page=1&q=",
   compl:  "https://hub.docker.com/v2/search/repositories/?page_size=20&query=",
+}
+
+// Docker Docs
+completions.ddc = {
+  alias:  "ddc",
+  name:   "dockerdocs",
+  search: "https://docs.docker.com/search/?q=",
 }
 
 completions.dh.callback = response =>
@@ -333,7 +441,14 @@ completions.sc = {
   // compl:  "",
 }
 
-// Domainr domain search
+// Phind - programming assistant
+completions.phind = {
+  alias:  "ph",
+  name:   "phind",
+  search: "https://www.phind.com/search?q=",
+}
+
+// Domainr - domain search
 completions.do = {
   alias:  "do",
   name:   "domainr",
@@ -378,7 +493,9 @@ completions.vw.callback = response =>
     createURLItem(r, `https://vim.fandom.com/wiki/${r}`),
   )
 
-// ****** Shopping & Food ****** //
+//  ╭──────────────────────────────────────────────────────────╮
+//  │                     Shopping & Food                      │
+//  ╰──────────────────────────────────────────────────────────╯
 
 // Amazon
 completions.az = {
@@ -391,7 +508,9 @@ completions.az = {
 
 completions.az.callback = response => JSON.parse(response.text)[1]
 
-// ****** General References, Calculators & Utilities ****** //
+//  ╭──────────────────────────────────────────────────────────╮
+//  │       General References, Calculators & Utilities        │
+//  ╰──────────────────────────────────────────────────────────╯
 
 const parseDatamuseRes = (res, o = {}) => {
   const opts = {
@@ -519,6 +638,13 @@ completions.wt = {
 completions.wt.callback = response =>
   Object.values(JSON.parse(response.text).query.pages).map(p => p.title)
 
+// Wikibooks
+completions.wb = {
+  alias:  "wb",
+  name:   "wikibooks",
+  search: "https://en.wikibooks.org/w/index.php?fulltext=Search&title=Special%3ASearch&search=",
+}
+
 // WolframAlpha
 completions.wa = {
   alias:  "wa",
@@ -619,7 +745,23 @@ completions.wa.callback = response => {
   )
 }
 
-// ****** Search Engines ****** //
+// Creative Commons - creative works
+completions.creativecommons = {
+  alias:  "ccsearch",
+  name:   "creativecommons",
+  search: "https://search.creativecommons.org/search?q=",
+}
+
+// Openverse - creative works
+completions.openverse = {
+  alias:  "openv",
+  name:   "openverse",
+  search: "https://openverse.org/search/?q=",
+}
+
+//  ╭──────────────────────────────────────────────────────────╮
+//  │                      Search Engines                      │
+//  ╰──────────────────────────────────────────────────────────╯
 
 // DuckDuckGo
 completions.dd = {
@@ -766,26 +908,32 @@ completions.ka = {
     }),
 }
 
-// Searx
+// Searx - coppedge.info
 completions.sxc = {
-  alias:  "sxc",
+  alias:  "sxc", // "coppedge"
   name:   "searx-coppedge",
   search: "https://coppedge.info/search?language=en-US&safesearch=0&q=",
   // compl:  "https://coppedge.info/opensearch.xml?method=POST&autocomplete=duckduckgo",
   compl:  "https://duckduckgo.com/ac/?q=",
 }
 
+// Searx - baresearch.org
 completions.sxb = {
-  alias:  "sxb",
-  name:   "searx-coppedge",
+  alias:  "sxb", // "baresearch"
+  name:   "searx-baresearch",
   search: "https://baresearch.org/search?language=en-US&safesearch=0&q=",
-  // compl:  "https://coppedge.info/opensearch.xml?method=POST&autocomplete=duckduckgo",
-  // compl:  "https://duckduckgo.com/ac/?q=",
+}
+
+// Searx - paulgo
+completions.paulgo = {
+  alias:  "sxp", // "paulgo"
+  name:   "searx-paulgo",
+  search: "https://paulgo.io/search?q=",
 }
 
 // Brave
 completions.br = {
-  alias:  "br",
+  alias:  "br", // "b"
   name:   "brave",
   search: "https://search.brave.com/search?q=",
   compl:  "https://search.brave.com/api/suggest?q=",
@@ -826,13 +974,44 @@ completions.who = {
 
 // Presearch
 completions.ps = {
-  alias:  "ps",
+  alias:  "ps", // "presearch"
   name:   "presearch",
   search: "https://presearch.com/search?q=",
   // compl:  "https://www.startpage.com/do/suggest?query=",
 }
 
-// ****** Golang ****** //
+// Ecosia
+completions.ec = {
+  alias:  "ec", // "ecosia"
+  name:   "ecosia",
+  search: "https://www.ecosia.org/search?q=",
+  // compl:  "https://search.brave.com/api/suggest?q=",
+}
+
+// Metager
+completions.met = {
+  alias:  "met", // "ecosia"
+  name:   "metager",
+  search: "https://metager.org/meta/meta.ger3?eingabe=",
+}
+
+// Qwant
+completions.qw = {
+  alias:  "qw", // "qwant"
+  name:   "qwant",
+  search: "https://www.qwant.com/?client=brz-brave&q=",
+}
+
+// DSearch
+completions.ds = {
+  alias:  "ds", // "dsearch"
+  name:   "dsearch",
+  search: "https://dsearch.com/search?q=",
+}
+
+//  ╭──────────────────────────────────────────────────────────╮
+//  │                          Golang                          │
+//  ╰──────────────────────────────────────────────────────────╯
 
 // Golang Docs
 completions.gg = googleCustomSearch({
@@ -861,16 +1040,20 @@ completions.gd.callback = response =>
     return createURLItem(prefix + s.path, `https://godoc.org/${s.path}`)
   })
 
-// ****** Ruby ******
+//  ╭──────────────────────────────────────────────────────────╮
+//  │                           Ruby                           │
+//  ╰──────────────────────────────────────────────────────────╯
 
-completions.rbp = {
-  alias:  "rbp",
+completions.gems = {
+  alias:  "gems",
   name:   "rubygems",
   search: "https://rubygems.org/search?utf8=✓&query=",
   // compl:  "",
 }
 
-// ****** Python ******
+//  ╭──────────────────────────────────────────────────────────╮
+//  │                          Python                          │
+//  ╰──────────────────────────────────────────────────────────╯
 
 completions.pyp = {
   alias:  "pyp",
@@ -879,37 +1062,41 @@ completions.pyp = {
   // compl:  "",
 }
 
-// ****** Rust ******
+//  ╭──────────────────────────────────────────────────────────╮
+//  │                           Rust                           │
+//  ╰──────────────────────────────────────────────────────────╯
 
+// Rust std docs (doc.rust-lang.org)
 completions.rsi = {
   alias:  "rsi",
-  name:   "rust-docs",
+  name:   "rust_docs",
   search: "https://doc.rust-lang.org/std/index.html?search=",
-  // compl:  "",
 }
 
+// Rust crate docs (docs.rs)
 completions.rsd = {
   alias:  "rsd",
-  name:   "rust-crate-docs",
+  name:   "rust_crate_docs",
   search: "https://docs.rs/releases/search?query=",
-  // compl:  "",
 }
 
+// Rust library search (lib.rs)
 completions.rsl = {
   alias:  "rsl",
-  name:   "rust-lib",
+  name:   "rust_lib",
   search: "https://lib.rs/search?q=?",
-  // compl:  "",
 }
 
+// Rust packages (crates.io)
 completions.rsp = {
   alias:  "rsp",
-  name:   "rust-packages",
+  name:   "rust_packages",
   search: "https://crates.io/search?q=",
-  // compl:  "",
 }
 
-// ****** HTML, CSS, JavaScript, NodeJS, ... ****** //
+//  ╭──────────────────────────────────────────────────────────╮
+//  │              HTML, CSS, JavaScript, NodeJS               │
+//  ╰──────────────────────────────────────────────────────────╯
 
 // caniuse
 completions.ci = {
@@ -978,7 +1165,7 @@ completions.ci.callback = async response => {
 
 // jQuery API documentation
 completions.jq = googleCustomSearch({
-  alias:  "jq",
+  alias:  "jqu",
   name:   "jquery",
   domain: "jquery.com",
 })
@@ -1063,7 +1250,9 @@ completions.np.callback = response =>
     )
   })
 
-// ****** Social Media & Entertainment ****** //
+//  ╭──────────────────────────────────────────────────────────╮
+//  │               Social Media & Entertainment               │
+//  ╰──────────────────────────────────────────────────────────╯
 
 // Hacker News (YCombinator)
 completions.hn = {
@@ -1179,7 +1368,7 @@ completions.yta = {
 
 // 4plebs
 completions.fp = {
-  alias:  "fp",
+  alias:  "fp", // "4"
   name:   "4plebs",
   search: "https://archive.4plebs.org/pol/search/text/",
 }
@@ -1187,6 +1376,7 @@ completions.fp = {
 // ╭──────────────────────────────────────────────────────────╮
 // │                          Piracy                          │
 // ╰──────────────────────────────────────────────────────────╯
+
 // PDFDrive
 completions.pdf = {
   alias:  "pdf",
@@ -1194,11 +1384,116 @@ completions.pdf = {
   search: "https://www.pdfdrive.com/search?q=",
 }
 
-// LibGen
-completions.lg = {
-  alias:  "lg",
-  name:   "libgen",
+// LibGen.is
+completions.libg = {
+  alias:  "libg", // "lg"
+  name:   "libgen.is",
   search: "http://libgen.rs/search.php?req=",
 }
+
+// LibGen.rs
+completions.libr = {
+  alias:  "libr", // "lgr"
+  name:   "libgen.rs",
+  search: "http://libgen.rs/search.php?req=",
+}
+
+// Sci-Hub
+completions.scihub = {
+  alias:  "sci",
+  name:   "scihub",
+  search: "https://sci-hub.ru/",
+}
+
+// ╭──────────────────────────────────────────────────────────╮
+// │                          Other                           │
+// ╰──────────────────────────────────────────────────────────╯
+
+// Cryptome
+completions.cr = {
+  alias:  "cr",
+  name:   "cryptome",
+  search: "https://google.com/search?q=site%3Acryptome.org+",
+}
+
+// Wikileaks
+completions.wl = {
+  alias:  "wl",
+  name:   "wikileaks",
+  search: "https://search.wikileaks.org/?q=",
+}
+
+// Wikispooks
+completions.wo = {
+  alias:  "wo",
+  name:   "wikispooks",
+  search: "https://wikispooks.com/w/index.php?fulltext=Search&title=Special%3ASearch&search=",
+}
+
+// PGP - MIT
+completions.pgpmit = {
+  alias:  "pgpm",
+  name:   "pgp_mit",
+  search: "https://pgp.mit.edu/pks/lookup?op=index&search=",
+}
+
+// PGP - OpenPGP
+completions.pgpopen = {
+  alias:  "pgpo",
+  name:   "pgp_openpgp",
+  search: "https://keys.openpgp.org/search?q=",
+}
+
+// TODO:
+
+// // Pastebin
+// completions.pastebin = {
+//   alias:  "pb",
+//   name:   "pastebin",
+//   search: "http://pastebin.com/search?ie=UTF-8&q=",
+// }
+//
+// // Wikidata
+// completions.wd = {
+//   alias:  "wd",
+//   name:   "wikidata",
+//   search: "https://wikidata.org/w/index.php?fulltext=Search&title=Special%3ASearch&search=",
+// }
+//
+// // Wikimedia
+// completions.wm = {
+//   alias:  "wm",
+//   name:   "wikimedia",
+//   search: "https://commons.wikimedia.org/w/index.php?fulltext=Search&title=Special%3AMediaSearch&type=image&search=",
+// }
+//
+// // Wikiquote
+// completions.wq = {
+//   alias:  "wq",
+//   name:   "wikiquote",
+//   search: "https://en.wikiquote.org/w/index.php?fulltext=Search&title=Special%3ASearch&search=",
+// }
+//
+// // Wikisource
+// completions.wr = {
+//   alias:  "wr",
+//   name:   "wikisource",
+//   search: "https://en.wikisource.org/w/index.php?fulltext=Search&title=Special%3ASearch&search=",
+// }
+//
+// // man7.org
+// completions.man7s = googleCustomSearch({
+//   alias:  "man7s",
+//   name:   "man7_website",
+//   search: "man7.org",
+//   // search: "https://www.google.com/search?q=%s&sitesearch=man7.org%2Flinux%2Fman-pages&sa=Search+online+pages",
+// })
+//
+// // man.cx(3) - Library Calls
+// completions.mancx3 = {
+//   alias:  "cman3",
+//   name:   "mancx_3_libcalls",
+//   search: "https://man.cx/%s(3)",
+// }
 
 export default completions
