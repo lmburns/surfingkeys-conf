@@ -172,6 +172,13 @@ completions.man7 = {
   search: "http://man.he.net/?section=7&topic=",
 }
 
+// Pubs.OpenGroup - Unix Docs
+completions.opengroup = {
+  alias:  "og",
+  name:   "pubs_opengroup",
+  search: "https://pubs.opengroup.org/cgi/kman4.cgi?value=",
+}
+
 // SourceForge
 completions.sourceforge = {
   alias:  "sf",
@@ -1084,7 +1091,7 @@ completions.rsd = {
 completions.rsl = {
   alias:  "rsl",
   name:   "rust_lib",
-  search: "https://lib.rs/search?q=?",
+  search: "https://lib.rs/search?q=",
 }
 
 // Rust packages (crates.io)
